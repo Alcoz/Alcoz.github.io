@@ -1,24 +1,27 @@
 ---
 # Display name
-title: Alice Wu (吳恩達)
+title: Baptiste Darnala
+
+first_name: Baptiste
+last_name: Darnala
 
 # Is this the primary user of the site?
 superuser: true
 
 # Role/position
-role: ''
+role: 'PhD'
 
 # Status emoji
 status:
-  icon: ☕️
+  icon: 
 
 # Organizations/Affiliations
-#organizations:
-#- name: 腾讯
-#  url: ""
+organizations:
+- name: Elzeard
+- url: https://www.elzeard.co/
 
 # Short bio (displayed in user profile at end of posts)
-bio: My research interests include distributed robotics, mobile computing and programmable matter.
+bio: My research interests include machine learning, knowledge graph and agriculture.
 
 #interests:
 #- Artificial Intelligence
