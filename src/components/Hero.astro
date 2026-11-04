@@ -1,0 +1,290 @@
+---
+import { profile } from '../data/profile';
+import GithubIcon from '../assets/icons/github.svg';
+import LinkedinIcon from '../assets/icons/linkedin.svg';
+
+const [mainTitle, ...otherTitles] = profile.title.split('/').map((t) => t.trim());
+
+const initials = profile.name
+	.split(' ')
+	.map((part) => part[0])
+	.join('')
+	.toUpperCase();
+
+// Découpe un paragraphe en segments : texte simple, surligné ou en gras.
+type Segment = { text: string; kind?: 'highlight' | 'strong' };
+const escape = (s: string) => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+const terms = [...profile.highlights, ...profile.strong].sort((a, b) => b.length - a.length);
+const pattern = new RegExp(`(?<![\\p{L}\\d])(${terms.map(escape).join('|')})(?![\\p{L}\\d])`, 'gu');
+
+function segments(paragraph: string): Segment[] {
+	if (terms.length === 0) return [{ text: paragraph }];
+	return paragraph
+		.split(pattern)
+		.filter((part) => part !== '')
+		.map((part) => {
+			if (profile.highlights.includes(part)) return { text: part, kind: 'highlight' };
+			if (profile.strong.includes(part)) return { text: part, kind: 'strong' };
+			return { text: part };
+		});
+}
+---
+
+<section class="hero">
+	<div class="identity">
+		<div class="cell">
+			{
+				profile.photo ? (
+					<img class="photo" src={profile.photo} alt={profile.name} width="160" height="160" />
+				) : (
+					<div class="photo placeholder" aria-hidden="true">
+						{initials}
+					</div>
+				)
+			}
+			<h1>{profile.name}</h1>
+			<p class="role">{mainTitle}</p>
+			{otherTitles.map((t) => <p class="role secondary">{t}</p>)}
+			{
+				(profile.location || profile.email) && (
+					<div class="contact">
+						{profile.location && (
+							<span>
+								<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+									<path d="M12 21s-7-6.2-7-11.5A7 7 0 0 1 19 9.5C19 14.8 12 21 12 21Z" />
+									<circle cx="12" cy="9.5" r="2.5" />
+								</svg>
+								{profile.location}
+							</span>
+						)}
+						{profile.email && (
+							<a href={`mailto:${profile.email}`}>
+								<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+									<rect x="3" y="5" width="18" height="14" rx="2" />
+									<path d="m3 7 9 6 9-6" />
+								</svg>
+								{profile.email}
+							</a>
+						)}
+					</div>
+				)
+			}
+		</div>
+		<div class="bar">
+			<ul class="interests">
+				{profile.interests.map((interest) => <li>{interest}</li>)}
+			</ul>
+		</div>
+	</div>
+
+	<div class="about">
+		<div class="cell">
+			{
+				profile.bio.map((paragraph) => (
+					<p>
+						{segments(paragraph).map((s) =>
+							s.kind === 'highlight' ? (
+								<mark>{s.text}</mark>
+							) : s.kind === 'strong' ? (
+								<strong>{s.text}</strong>
+							) : (
+								s.text
+							),
+						)}
+					</p>
+				))
+			}
+		</div>
+		<div class="bar">
+			<a href={profile.links.linkedin} target="_blank" rel="noopener noreferrer" aria-label="LinkedIn" title="LinkedIn">
+				<LinkedinIcon width={20} height={20} />
+			</a>
+			<a href={profile.links.github} target="_blank" rel="noopener noreferrer" aria-label="GitHub" title="GitHub">
+				<GithubIcon width={20} height={20} />
+			</a>
+		</div>
+	</div>
+</section>
+
+<style>
+	.hero {
+		/* Le bloc déborde de la colonne de texte pour occuper plus de largeur. */
+		width: min(74rem, calc(100vw - 2rem));
+		margin-left: 50%;
+		transform: translateX(-50%);
+		margin-top: 1rem;
+		margin-bottom: 1rem;
+
+		display: grid;
+		grid-template-columns: 1fr 1.7fr;
+		border: 1px solid var(--border);
+		border-top: 0;
+		border-bottom: 0;
+	}
+
+	.identity,
+	.about {
+		display: flex;
+		flex-direction: column;
+		border-top: 1px solid var(--border);
+		border-bottom: 1px solid var(--border);
+	}
+
+	.identity {
+		border-right: 1px solid var(--border);
+	}
+
+	.cell {
+		flex: 1;
+		padding: 1.5rem;
+	}
+
+	.bar {
+		display: flex;
+		flex-wrap: wrap;
+		align-items: center;
+		gap: 0.75rem 1.5rem;
+		min-height: 4rem;
+		padding: 0.75rem 1.5rem;
+		border-top: 1px solid var(--border);
+	}
+
+	/* Identité */
+	.photo {
+		display: block;
+		width: 160px;
+		height: 160px;
+		object-fit: cover;
+		border-radius: 12px;
+		box-shadow: 0 4px 16px var(--shadow);
+	}
+
+	.placeholder {
+		display: grid;
+		place-items: center;
+		background: var(--bg-raised);
+		color: var(--muted);
+		font-size: 3rem;
+		font-weight: 600;
+	}
+
+	h1 {
+		margin: 1.25rem 0 0.75rem;
+		font-size: clamp(2.4rem, 5vw, 3.4rem);
+		font-weight: 600;
+		letter-spacing: -0.025em;
+		line-height: 1;
+	}
+
+	.role {
+		margin: 0.35rem 0 0;
+		font-family: var(--font-ui);
+		font-size: 0.78rem;
+		font-weight: 500;
+		text-transform: uppercase;
+		letter-spacing: 0.14em;
+		line-height: 1.5;
+		color: var(--accent);
+	}
+
+	.role.secondary {
+		color: var(--muted);
+	}
+
+	.interests {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 0.5rem;
+		list-style: none;
+		margin: 0;
+		padding: 0;
+	}
+
+	.interests li {
+		padding: 0.15rem 0.6rem;
+		border: 1px solid var(--border);
+		border-radius: 999px;
+		background: var(--bg-raised);
+		font-family: var(--font-ui);
+		font-size: 0.7rem;
+		color: var(--muted);
+	}
+
+	.contact {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 0.5rem 1.5rem;
+		margin-top: 1.25rem;
+	}
+
+	.contact a:hover {
+		text-decoration: underline;
+		text-underline-offset: 3px;
+	}
+
+	.contact span,
+	.contact a {
+		display: inline-flex;
+		align-items: center;
+		gap: 0.5rem;
+		text-decoration: none;
+		font-family: var(--font-ui);
+		font-size: 0.75rem;
+		color: var(--fg);
+	}
+
+	.contact svg {
+		width: 16px;
+		height: 16px;
+		color: var(--muted);
+	}
+
+	/* Présentation */
+	.about p {
+		margin: 0 0 1rem;
+		font-size: 1.05rem;
+		line-height: 1.7;
+		color: var(--muted);
+	}
+
+	.about p:last-child {
+		margin-bottom: 0;
+	}
+
+	.about strong {
+		color: var(--fg);
+		font-weight: 600;
+	}
+
+	mark {
+		padding: 0.05em 0.3em;
+		border-radius: 4px;
+		background: var(--mark);
+		color: var(--fg);
+		font-weight: 500;
+	}
+
+	.about .bar a {
+		display: flex;
+		color: var(--muted);
+		transition: color 0.15s;
+	}
+
+	.about .bar a:hover {
+		color: var(--fg);
+	}
+
+	@media (max-width: 760px) {
+		.hero {
+			grid-template-columns: 1fr;
+		}
+
+		.identity {
+			border-right: 0;
+		}
+
+		.about {
+			border-top: 0;
+		}
+	}
+</style>

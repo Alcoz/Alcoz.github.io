@@ -1,23 +1,44 @@
+---
+import { Font } from 'astro:assets';
+import Header from '../components/Header.astro';
+import { profile } from '../data/profile';
+import '../styles/global.css';
+
+interface Props {
+	title?: string;
+	description?: string;
+}
+
+const { title, description = profile.bio[0] } = Astro.props;
+const fullTitle = title ? `${title} — ${profile.name}` : profile.name;
+---
+
 <!doctype html>
-<html lang="en">
+<html lang="fr">
 	<head>
 		<meta charset="utf-8" />
-		<meta name="viewport" content="width=device-width" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<meta name="description" content={description} />
 		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 		<link rel="icon" href="/favicon.ico" />
 		<meta name="generator" content={Astro.generator} />
-		<title>Astro Basics</title>
+		<Font cssVariable="--font-serif" preload />
+		<Font cssVariable="--font-mono" />
+		<title>{fullTitle}</title>
+		<!-- Applique le thème choisi avant l'affichage, pour éviter un flash de couleur. -->
+		<script is:inline>
+			try {
+				const saved = localStorage.getItem('theme');
+				if (saved === 'light' || saved === 'dark') {
+					document.documentElement.dataset.theme = saved;
+				}
+			} catch {}
+		</script>
 	</head>
 	<body>
-		<slot />
+		<Header />
+		<main>
+			<slot />
+		</main>
 	</body>
 </html>
-
-<style>
-	html,
-	body {
-		margin: 0;
-		width: 100%;
-		height: 100%;
-	}
-</style>

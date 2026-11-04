@@ -1,11 +1,146 @@
 ---
-import Welcome from '../components/Welcome.astro';
+import { getCollection } from 'astro:content';
 import Layout from '../layouts/Layout.astro';
+import ProjectCard from '../components/ProjectCard.astro';
+import Hero from '../components/Hero.astro';
+import { featuredProjects, experiences, education } from '../data/profile';
 
-// Welcome to Astro! Wondering what to do next? Check out the Astro documentation at https://docs.astro.build
-// Don't want to use any of this? Delete everything in this file, the `assets`, `components`, and `layouts` directories, and start fresh.
+const allProjects = await getCollection('projects');
+const featured = featuredProjects
+	.map((id) => allProjects.find((p) => p.id === id))
+	.filter((p) => p !== undefined);
 ---
 
 <Layout>
-	<Welcome />
+	<Hero />
+
+	<section>
+		<h2 class="label section-head">
+			<span>Projets</span>
+			<a href="/projets">Tous les projets →</a>
+		</h2>
+		<div class="grid">
+			{featured.map((project) => <ProjectCard project={project} />)}
+		</div>
+	</section>
+
+	<section>
+		<h2 class="label">Expériences</h2>
+		<ul class="list">
+			{
+				experiences.map((xp) => (
+					<li>
+						<div class="row">
+							<h3>{xp.role}</h3>
+							<span class="meta">
+								{xp.start} – {xp.end ?? "aujourd'hui"}
+							</span>
+						</div>
+						<div class="meta">
+							{xp.company}
+							{xp.location && <> · {xp.location}</>}
+						</div>
+						{xp.missions && (
+							<ul class="missions">
+								{xp.missions.map((mission) => (
+									<li>{mission}</li>
+								))}
+							</ul>
+						)}
+					</li>
+				))
+			}
+		</ul>
+	</section>
+
+	<section>
+		<h2 class="label">Diplômes</h2>
+		<ul class="list">
+			{
+				education.map((degree) => (
+					<li>
+						<div class="row">
+							<h3>{degree.name}</h3>
+							<span class="meta">
+								{degree.start} – {degree.end}
+							</span>
+						</div>
+						<div class="meta">
+							{degree.school}
+							{degree.location && <> · {degree.location}</>}
+						</div>
+						{degree.description && <p>{degree.description}</p>}
+					</li>
+				))
+			}
+		</ul>
+	</section>
 </Layout>
+
+<style>
+	.section-head {
+		display: flex;
+		justify-content: space-between;
+		align-items: baseline;
+	}
+
+	.section-head a {
+		color: var(--muted);
+		text-decoration: none;
+		text-transform: none;
+		letter-spacing: 0.02em;
+	}
+
+	.section-head a:hover {
+		color: var(--accent);
+	}
+
+	.grid {
+		display: grid;
+		grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr));
+		gap: 1rem;
+	}
+
+	@media (max-width: 640px) {
+		.grid {
+			grid-template-columns: 1fr;
+		}
+	}
+
+	.row {
+		display: flex;
+		justify-content: space-between;
+		align-items: baseline;
+		gap: 0.25rem 1rem;
+		flex-wrap: wrap;
+	}
+
+	h3 {
+		margin: 0;
+		font-size: 1.15rem;
+	}
+
+	.list p {
+		margin: 0.25rem 0 0;
+	}
+
+	.list > li {
+		padding: 1.1rem 0;
+	}
+
+	.missions {
+		margin: 0.6rem 0 0;
+		padding-left: 1.1rem;
+		font-size: 0.95rem;
+		color: var(--muted);
+	}
+
+	.missions li {
+		padding: 0.1rem 0;
+		border: 0;
+	}
+
+	.missions li::marker {
+		color: var(--accent);
+	}
+</style>

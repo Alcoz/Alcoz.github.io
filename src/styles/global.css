@@ -1,0 +1,220 @@
+/* ---------- Thème : palette « papier » chaude, mode sombre « espresso » ---------- */
+
+:root {
+	color-scheme: light;
+	--bg: #f8f2e6;
+	--bg-raised: #f0e7d6;
+	--fg: #2d2620;
+	--muted: #675c4f;
+	--accent: #9c4a24;
+	--sage: #4e6743;
+	--border: #e3d8c3;
+	--mark: #f4dea2;
+	--selection: #f0d7a8;
+	--shadow: rgb(45 38 32 / 0.12);
+}
+
+@media (prefers-color-scheme: dark) {
+	:root:not([data-theme='light']) {
+		color-scheme: dark;
+		--bg: #1f1a15;
+		--bg-raised: #2a231c;
+		--fg: #ecdfcb;
+		--muted: #b0a08a;
+		--accent: #e8956a;
+		--sage: #adc29b;
+		--border: #3d3329;
+		--mark: #5e4a22;
+		--selection: #5c4630;
+		--shadow: rgb(0 0 0 / 0.35);
+	}
+}
+
+:root[data-theme='dark'] {
+	color-scheme: dark;
+	--bg: #1f1a15;
+	--bg-raised: #2a231c;
+	--fg: #ecdfcb;
+	--muted: #b0a08a;
+	--accent: #e8956a;
+	--sage: #adc29b;
+	--border: #3d3329;
+	--mark: #5e4a22;
+	--selection: #5c4630;
+	--shadow: rgb(0 0 0 / 0.35);
+}
+
+/* ---------- Typographie ---------- */
+
+:root {
+	--font-body: var(--font-serif), serif;
+	--font-ui: var(--font-mono), monospace;
+	--max-width: 46rem;
+	font-family: var(--font-body);
+	font-size: 112.5%;
+	line-height: 1.7;
+	color: var(--fg);
+	background: var(--bg);
+	-webkit-font-smoothing: antialiased;
+}
+
+*,
+*::before,
+*::after {
+	box-sizing: border-box;
+}
+
+::selection {
+	background: var(--selection);
+}
+
+body {
+	margin: 0;
+	background: var(--bg);
+	color: var(--fg);
+	transition:
+		background-color 0.2s,
+		color 0.2s;
+}
+
+main {
+	max-width: var(--max-width);
+	margin: 0 auto;
+	padding: 2.5rem 1rem 5rem;
+}
+
+a {
+	color: var(--accent);
+	text-decoration-thickness: 1px;
+	text-underline-offset: 0.2em;
+}
+
+h1,
+h2,
+h3 {
+	font-weight: 600;
+	letter-spacing: -0.015em;
+	line-height: 1.2;
+}
+
+h1 {
+	font-size: 2.4rem;
+}
+
+/* Titres de section : petites capitales en monospace, soulignées d'un trait */
+.label {
+	margin: 3.5rem 0 1.25rem;
+	padding-bottom: 0.5rem;
+	border-bottom: 1px solid var(--border);
+	font-family: var(--font-ui);
+	font-size: 0.75rem;
+	font-weight: 500;
+	letter-spacing: 0.08em;
+	text-transform: uppercase;
+	color: var(--muted);
+}
+
+.muted {
+	color: var(--muted);
+}
+
+/* Métadonnées : dates, lieux, tags */
+.meta {
+	font-family: var(--font-ui);
+	font-size: 0.72rem;
+	letter-spacing: 0.02em;
+	color: var(--muted);
+}
+
+.list {
+	list-style: none;
+	padding: 0;
+	margin: 0;
+}
+
+.list > li {
+	padding: 0.75rem 0;
+}
+
+.list > li + li {
+	border-top: 1px solid var(--border);
+}
+
+/* ---------- Contenu Markdown (articles et projets) ---------- */
+
+article h2 {
+	margin-top: 2.5rem;
+	font-size: 1.45rem;
+}
+
+article table {
+	width: 100%;
+	border-collapse: collapse;
+	font-size: 0.85rem;
+	line-height: 1.5;
+	display: block;
+	overflow-x: auto;
+}
+
+article th,
+article td {
+	padding: 0.55rem 0.75rem;
+	border-bottom: 1px solid var(--border);
+	text-align: left;
+	vertical-align: top;
+}
+
+article th {
+	font-family: var(--font-ui);
+	font-size: 0.72rem;
+	font-weight: 500;
+	letter-spacing: 0.06em;
+	text-transform: uppercase;
+	color: var(--muted);
+	border-bottom-color: var(--fg);
+}
+
+article code {
+	font-family: var(--font-ui);
+	font-size: 0.82em;
+}
+
+article :not(pre) > code {
+	padding: 0.1em 0.35em;
+	border-radius: 4px;
+	background: var(--bg-raised);
+}
+
+article pre {
+	padding: 1rem;
+	border: 1px solid var(--border);
+	border-radius: 6px;
+	overflow-x: auto;
+	font-size: 0.8rem;
+	line-height: 1.45;
+}
+
+/* Blocs de code : thème Shiki clair ou sombre selon le mode, sur le fond du site */
+.astro-code {
+	background-color: var(--bg-raised) !important;
+}
+
+:root[data-theme='dark'] .astro-code,
+:root[data-theme='dark'] .astro-code span {
+	color: var(--shiki-dark) !important;
+}
+
+@media (prefers-color-scheme: dark) {
+	:root:not([data-theme='light']) .astro-code,
+	:root:not([data-theme='light']) .astro-code span {
+		color: var(--shiki-dark) !important;
+	}
+}
+
+article li + li {
+	margin-top: 0.4rem;
+}
+
+article strong {
+	font-weight: 600;
+}

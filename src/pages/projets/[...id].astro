@@ -1,0 +1,43 @@
+---
+import { getCollection, render } from 'astro:content';
+import Layout from '../../layouts/Layout.astro';
+import FormattedDate from '../../components/FormattedDate.astro';
+
+export async function getStaticPaths() {
+	const projects = await getCollection('projects');
+	return projects.map((project) => ({ params: { id: project.id }, props: { project } }));
+}
+
+const { project } = Astro.props;
+const { Content } = await render(project);
+---
+
+<Layout title={project.data.title} description={project.data.summary}>
+	<a href="/projets" class="meta back">← Tous les projets</a>
+	<h1>{project.data.title}</h1>
+	<p class="meta">
+		<FormattedDate date={project.data.date} />
+		{project.data.tags.length > 0 && <> · {project.data.tags.join(' · ')}</>}
+	</p>
+	<p>
+		{project.data.repo && <a href={project.data.repo} target="_blank" rel="noopener noreferrer">Code source</a>}
+		{project.data.demo && <> · <a href={project.data.demo} target="_blank" rel="noopener noreferrer">Démo</a></>}
+	</p>
+	<article>
+		<Content />
+	</article>
+</Layout>
+
+<style>
+	.back {
+		text-decoration: none;
+	}
+
+	.back:hover {
+		color: var(--accent);
+	}
+
+	h1 {
+		margin: 1.25rem 0 0.5rem;
+	}
+</style>
