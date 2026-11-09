@@ -17,7 +17,7 @@ export const profile = {
 	strong: ['Python', 'SQL', 'PyTorch', 'LangChain', 'dbt', 'Dagster', 'Airflow'],
 	interests: ['Intelligence Artificielle', 'Data Engineering', 'MLOPS'],
 	// Optionnels : laisse vide pour masquer.
-	photo: '', // ex. '/photo.jpg' (fichier placé dans public/)
+	photo: '/photo.jpg', // fichier placé dans public/
 	location: '', // ex. 'Paris, France'
 	email: 'baptiste.darnala.sec@gmail.com',
 	links: {
