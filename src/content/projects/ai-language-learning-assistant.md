@@ -4,6 +4,8 @@ summary: 'Professeur de langue conversationnel, à l’écrit comme à l’oral,
 date: 2026-07-18
 tags: ['IA', 'LLM', 'Ollama', 'FastAPI', 'Whisper', 'Langfuse']
 repo: 'https://github.com/Alcoz/ai-language-learning-assistant'
+cover: './images/scrabble.jpg'
+coverAlt: 'Lettres de Scrabble'
 ---
 
 ## Contexte

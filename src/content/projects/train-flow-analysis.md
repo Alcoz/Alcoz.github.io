@@ -4,6 +4,8 @@ summary: 'Plateforme de données qui collecte en continu les horaires et les ret
 date: 2026-04-22
 tags: ['Data Engineering', 'Dagster', 'dbt', 'DuckDB', 'Polars']
 repo: 'https://github.com/Alcoz/train-flow-analysis'
+cover: './images/rail.jpg'
+coverAlt: 'Voies ferrées'
 ---
 
 ## Contexte
